@@ -47,7 +47,15 @@
     "watchify": "^3.9.0"
   },
   "dependencies": {
+    "babelify": "^7.3.0",
+    "browserify": "^14.1.0",
     "fbemitter": "^2.1.1",
-    "tether": "^1.4.0"
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglify": "^2.1.2",
+    "tether": "^1.4.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.9.0"
   }
 }

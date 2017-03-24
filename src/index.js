@@ -5,7 +5,7 @@ const Emojis = require('./emojis');
 const List = require('./list');
 const classnames = require('./classnames');
 
-const defaults = {
+var config = {
     search: true,
     frequent: true,
     fitzpatrick: 'a',
@@ -19,7 +19,7 @@ const defaults = {
 
     locale: {
         add: 'Add emoji',
-        brand: 'EmojiPanel',
+        brand: 'Add Emoji!',
         frequent: 'Frequently used',
         loading: 'Loading...',
         no_results: 'No results',
@@ -29,6 +29,7 @@ const defaults = {
     icons: {
         search: '<span class="fa fa-search"></span>'
     },
+    customEmojis: [],
     classnames
 };
 
@@ -36,7 +37,7 @@ export default class EmojiPanel extends EventEmitter {
     constructor(options) {
         super();
 
-        this.options = Object.assign({}, defaults, options);
+        this.options = Object.assign({}, config, options);
 
         const els = ['container', 'trigger', 'editable'];
         els.forEach(el => {
@@ -51,6 +52,8 @@ export default class EmojiPanel extends EventEmitter {
 
         Emojis.load(this.options)
             .then(res => {
+
+                //res[1].unshift({name: "Your Emojis", emojis: config.customEmojis, "icon": {"unicode": "1f44f","char": "👏"}});
                 List(this.options, this.panel, res[1], this.emit.bind(this));
             });
     }
