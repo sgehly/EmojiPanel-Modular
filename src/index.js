@@ -12,13 +12,13 @@ var config = {
     hidden_categories: [],
 
     pack_url: null,
-    json_url: '/emojis.json',
+    json_url: '/icons/emojis.json',
 
     tether: true,
     placement: 'bottom',
 
     locale: {
-        add: 'Add emoji',
+        add: '',
         brand: 'Add Emoji!',
         frequent: 'Frequently used',
         loading: 'Loading...',
@@ -52,9 +52,8 @@ export default class EmojiPanel extends EventEmitter {
 
         Emojis.load(this.options)
             .then(res => {
-
                 //res[1].unshift({name: "Your Emojis", emojis: config.customEmojis, "icon": {"unicode": "1f44f","char": "👏"}});
-                List(this.options, this.panel, res[1], this.emit.bind(this));
+                List(this.options, this.panel, window.emojis, this.emit.bind(this));
             });
     }
 
@@ -64,7 +63,7 @@ export default class EmojiPanel extends EventEmitter {
             
         this.emit('toggle', open);
         if(open && this.options.search && searchInput) {
-            searchInput.focus();
+            //searchInput.focus();
         }
     }
 

@@ -136,40 +136,8 @@ const Create = (options, emit, toggle) => {
     // Append the dropdown menu to the container
     options.container.appendChild(panel);
 
-    // Tether the dropdown to the trigger
-    let tether;
-    if(options.trigger && options.tether) {
-        const placements = ['top', 'right', 'bottom', 'left'];
-        if(placements.indexOf(options.placement) == -1) {
-            throw new Error(`Invalid attachment '${options.placement}'. Valid placements are '${placements.join(`', '`)}'.`);
-        }
-
-        let attachment;
-        let targetAttachment;
-        switch(options.placement) {
-            case placements[0]: case placements[2]:
-                attachment = (options.placement == placements[0] ? placements[2] : placements[0]) + ' center';
-                targetAttachment = (options.placement == placements[0] ? placements[0] : placements[2]) + ' center';
-                break;
-            case placements[1]: case placements[3]:
-                attachment = 'top ' + (options.placement == placements[1] ? placements[3] : placements[1]);
-                targetAttachment = 'top ' + (options.placement == placements[1] ? placements[1] : placements[3]);
-                break;
-        }
-
-        tether = new Tether({
-            element: panel,
-            target: options.trigger,
-            attachment,
-            targetAttachment
-        });
-    }
-
     // Return the panel element so we can update it later
-    return {
-        panel,
-        tether
-    };
+    return {panel};
 };
 
 const getCaretPosition = el => {

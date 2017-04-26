@@ -37,7 +37,7 @@ const Emojis = {
             });
         }
 
-        return Promise.all([ svgPromise, jsonPromise ]);
+        return svgPromise;
     },
     createEl: (emoji, options) => {
         if(options.pack_url) {
@@ -89,7 +89,6 @@ const Emojis = {
         if(!input) {
             return;
         }
-
         // Insert the emoji at the end of the text by default
         let offset = input.textContent.length;
         if(input.dataset.offset) {
@@ -105,7 +104,6 @@ const Emojis = {
         image.setAttribute('src', url);
         image.setAttribute('draggable', false);
         pictographs.appendChild(image);
-
         const span = document.createElement('span');
         span.classList.add('EmojiPanel__pictographText');
         span.setAttribute('title', emoji.name);
@@ -119,7 +117,6 @@ const Emojis = {
         if(div.innerHTML == '<br>') {
             div.innerHTML = '';
         }
-
         // Replace each pictograph span with it's native character
         const picts = div.querySelectorAll('.EmojiPanel__pictographText');
         [].forEach.call(picts, pict => {
@@ -130,7 +127,6 @@ const Emojis = {
         let content = emojiAware.split(div.textContent);
         content.splice(offset, 0, emoji.char);
         content = content.join('');
-        
         div.textContent = content;
 
         // Trigger a refresh of the input
