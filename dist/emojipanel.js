@@ -217,7 +217,7 @@ module.exports = BaseEventEmitter;
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
- * 
+ *
  * @providesModule EmitterSubscription
  * @typechecks
  */
@@ -317,7 +317,7 @@ module.exports = EventSubscription;
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
- * 
+ *
  * @providesModule EventSubscriptionVendor
  * @typechecks
  */
@@ -425,7 +425,7 @@ module.exports = EventSubscriptionVendor;
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * 
+ *
  */
 
 function makeEmptyFunction(arg) {
@@ -745,7 +745,7 @@ function getActualBoundingClientRect(node) {
   return rect;
 }
 
-function getScrollParents(el) {
+function getScrollParentsFunc(el) {
   // In firefox if the el is inside an iframe with display: none; window.getComputedStyle() will return null;
   // https://bugzilla.mozilla.org/show_bug.cgi?id=548397
   var computedStyle = getComputedStyle(el) || {};
@@ -790,7 +790,7 @@ function getScrollParents(el) {
   return parents;
 }
 
-var uniqueId = (function () {
+var uniqueIdFunc = (function () {
   var id = 0;
   return function () {
     return ++id;
@@ -806,8 +806,8 @@ var getOrigin = function getOrigin() {
   var node = zeroElement;
   if (!node || !document.body.contains(node)) {
     node = document.createElement('div');
-    node.setAttribute('data-tether-id', uniqueId());
-    extend(node.style, {
+    node.setAttribute('data-tether-id', uniqueIdFunc());
+    extendFunc(node.style, {
       top: 0,
       left: 0,
       position: 'absolute'
@@ -823,7 +823,7 @@ var getOrigin = function getOrigin() {
     zeroPosCache[id] = getActualBoundingClientRect(node);
 
     // Clear the cache when this position call is done
-    defer(function () {
+    deferFunc(function () {
       delete zeroPosCache[id];
     });
   }
@@ -831,14 +831,14 @@ var getOrigin = function getOrigin() {
   return zeroPosCache[id];
 };
 
-function removeUtilElements() {
+function removeUtilElementsFunc() {
   if (zeroElement) {
     document.body.removeChild(zeroElement);
   }
   zeroElement = null;
 };
 
-function getBounds(el) {
+function getBoundsFunc(el) {
   var doc = undefined;
   if (el === document) {
     doc = document;
@@ -871,12 +871,12 @@ function getBounds(el) {
   return box;
 }
 
-function getOffsetParent(el) {
+function getOffsetParentFunc(el) {
   return el.offsetParent || document.documentElement;
 }
 
 var _scrollBarSize = null;
-function getScrollBarSize() {
+function getScrollBarSizeFunc() {
   if (_scrollBarSize) {
     return _scrollBarSize;
   }
@@ -885,7 +885,7 @@ function getScrollBarSize() {
   inner.style.height = '200px';
 
   var outer = document.createElement('div');
-  extend(outer.style, {
+  extendFunc(outer.style, {
     position: 'absolute',
     top: 0,
     left: 0,
@@ -916,7 +916,7 @@ function getScrollBarSize() {
   return _scrollBarSize;
 }
 
-function extend() {
+function extendFunc() {
   var out = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
   var args = [];
@@ -936,7 +936,7 @@ function extend() {
   return out;
 }
 
-function removeClass(el, name) {
+function removeClassFunc(el, name) {
   if (typeof el.classList !== 'undefined') {
     name.split(' ').forEach(function (cls) {
       if (cls.trim()) {
@@ -950,7 +950,7 @@ function removeClass(el, name) {
   }
 }
 
-function addClass(el, name) {
+function addClassFunc(el, name) {
   if (typeof el.classList !== 'undefined') {
     name.split(' ').forEach(function (cls) {
       if (cls.trim()) {
@@ -958,13 +958,13 @@ function addClass(el, name) {
       }
     });
   } else {
-    removeClass(el, name);
+    removeClassFunc(el, name);
     var cls = getClassName(el) + (' ' + name);
     setClassName(el, cls);
   }
 }
 
-function hasClass(el, name) {
+function hasClassFunc(el, name) {
   if (typeof el.classList !== 'undefined') {
     return el.classList.contains(name);
   }
@@ -972,7 +972,7 @@ function hasClass(el, name) {
   return new RegExp('(^| )' + name + '( |$)', 'gi').test(className);
 }
 
-function getClassName(el) {
+function getClassNameFunc(el) {
   // Can't use just SVGAnimatedString here since nodes within a Frame in IE have
   // completely separately SVGAnimatedString base classes
   if (el.className instanceof el.ownerDocument.defaultView.SVGAnimatedString) {
@@ -981,45 +981,45 @@ function getClassName(el) {
   return el.className;
 }
 
-function setClassName(el, className) {
+function setClassNameFunc(el, className) {
   el.setAttribute('class', className);
 }
 
-function updateClasses(el, add, all) {
+function updateClassesFunc(el, add, all) {
   // Of the set of 'all' classes, we need the 'add' classes, and only the
   // 'add' classes to be set.
   all.forEach(function (cls) {
     if (add.indexOf(cls) === -1 && hasClass(el, cls)) {
-      removeClass(el, cls);
+      removeClassFunc(el, cls);
     }
   });
 
   add.forEach(function (cls) {
     if (!hasClass(el, cls)) {
-      addClass(el, cls);
+      addClassFunc(el, cls);
     }
   });
 }
 
 var deferred = [];
 
-var defer = function defer(fn) {
+var deferFunc = function deferFunc(fn) {
   deferred.push(fn);
 };
 
-var flush = function flush() {
+var flushFunc = function flushFunc() {
   var fn = undefined;
   while (fn = deferred.pop()) {
     fn();
   }
 };
 
-var Evented = (function () {
-  function Evented() {
-    _classCallCheck(this, Evented);
+var EventedFunc = (function () {
+  function EventedFunc() {
+    _classCallCheck(this, EventedFunc);
   }
 
-  _createClass(Evented, [{
+  _createClass(EventedFunc, [{
     key: 'on',
     value: function on(event, handler, ctx) {
       var once = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
@@ -1090,25 +1090,25 @@ var Evented = (function () {
     }
   }]);
 
-  return Evented;
+  return EventedFunc;
 })();
 
 TetherBase.Utils = {
   getActualBoundingClientRect: getActualBoundingClientRect,
-  getScrollParents: getScrollParents,
-  getBounds: getBounds,
-  getOffsetParent: getOffsetParent,
-  extend: extend,
-  addClass: addClass,
-  removeClass: removeClass,
-  hasClass: hasClass,
-  updateClasses: updateClasses,
-  defer: defer,
-  flush: flush,
-  uniqueId: uniqueId,
-  Evented: Evented,
-  getScrollBarSize: getScrollBarSize,
-  removeUtilElements: removeUtilElements
+  getScrollParents: getScrollParentsFunc,
+  getBounds: getBoundsFunc,
+  getOffsetParent: getOffsetParentFunc,
+  extend: extendFunc,
+  addClass: addClassFunc,
+  removeClass: removeClassFunc,
+  hasClass: hasClassFunc,
+  updateClasses: updateClassesFunc,
+  defer: deferFunc,
+  flush: flushFunc,
+  uniqueId: uniqueIdFunc,
+  Evented: EventedFunc,
+  getScrollBarSize: getScrollBarSizeFunc,
+  removeUtilElements: removeUtilElementsFunc
 };
 /* globals TetherBase, performance */
 
@@ -1314,8 +1314,8 @@ var parseOffset = function parseOffset(value) {
 };
 var parseAttachment = parseOffset;
 
-var TetherClass = (function (_Evented) {
-  _inherits(TetherClass, _Evented);
+var TetherClass = (function (_EventedFunc) {
+  _inherits(TetherClass, _EventedFunc);
 
   function TetherClass(options) {
     var _this = this;
@@ -1368,7 +1368,7 @@ var TetherClass = (function (_Evented) {
         classPrefix: 'tether'
       };
 
-      this.options = extend(defaults, options);
+      this.options = extendFunc(defaults, options);
 
       var _options = this.options;
       var element = _options.element;
@@ -1399,9 +1399,9 @@ var TetherClass = (function (_Evented) {
         }
       });
 
-      addClass(this.element, this.getClass('element'));
+      addClassFunc(this.element, this.getClass('element'));
       if (!(this.options.addTargetClasses === false)) {
-        addClass(this.target, this.getClass('target'));
+        addClassFunc(this.target, this.getClass('target'));
       }
 
       if (!this.options.attachment) {
@@ -1420,7 +1420,7 @@ var TetherClass = (function (_Evented) {
       if (this.targetModifier === 'scroll-handle') {
         this.scrollParents = [this.target];
       } else {
-        this.scrollParents = getScrollParents(this.target);
+        this.scrollParents = getScrollParentsFunc(this.target);
       }
 
       if (!(this.options.enabled === false)) {
@@ -1435,7 +1435,7 @@ var TetherClass = (function (_Evented) {
           if (this.target === document.body) {
             return { top: pageYOffset, left: pageXOffset, height: innerHeight, width: innerWidth };
           } else {
-            var bounds = getBounds(this.target);
+            var bounds = getBoundsFunc(this.target);
 
             var out = {
               height: bounds.height,
@@ -1476,7 +1476,7 @@ var TetherClass = (function (_Evented) {
               width: innerWidth
             };
           } else {
-            bounds = getBounds(target);
+            bounds = getBoundsFunc(target);
           }
 
           var style = getComputedStyle(target);
@@ -1515,7 +1515,7 @@ var TetherClass = (function (_Evented) {
           return out;
         }
       } else {
-        return getBounds(this.target);
+        return getBoundsFunc(this.target);
       }
     }
   }, {
@@ -1546,9 +1546,9 @@ var TetherClass = (function (_Evented) {
       var pos = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
       if (!(this.options.addTargetClasses === false)) {
-        addClass(this.target, this.getClass('enabled'));
+        addClassFunc(this.target, this.getClass('enabled'));
       }
-      addClass(this.element, this.getClass('enabled'));
+      addClassFunc(this.element, this.getClass('enabled'));
       this.enabled = true;
 
       this.scrollParents.forEach(function (parent) {
@@ -1566,8 +1566,8 @@ var TetherClass = (function (_Evented) {
     value: function disable() {
       var _this4 = this;
 
-      removeClass(this.target, this.getClass('enabled'));
-      removeClass(this.element, this.getClass('enabled'));
+      removeClassFunc(this.target, this.getClass('enabled'));
+      removeClassFunc(this.element, this.getClass('enabled'));
       this.enabled = false;
 
       if (typeof this.scrollParents !== 'undefined') {
@@ -1591,7 +1591,7 @@ var TetherClass = (function (_Evented) {
 
       // Remove any elements we were using for convenience from the DOM
       if (tethers.length === 0) {
-        removeUtilElements();
+        removeUtilElementsFunc();
       }
     }
   }, {
@@ -1634,14 +1634,14 @@ var TetherClass = (function (_Evented) {
         all.push(_this6.getClass('target-attached') + '-' + side);
       });
 
-      defer(function () {
+      deferFunc(function () {
         if (!(typeof _this6._addAttachClasses !== 'undefined')) {
           return;
         }
 
-        updateClasses(_this6.element, _this6._addAttachClasses, all);
+        updateClassesFunc(_this6.element, _this6._addAttachClasses, all);
         if (!(_this6.options.addTargetClasses === false)) {
-          updateClasses(_this6.target, _this6._addAttachClasses, all);
+          updateClassesFunc(_this6.target, _this6._addAttachClasses, all);
         }
 
         delete _this6._addAttachClasses;
@@ -1669,7 +1669,7 @@ var TetherClass = (function (_Evented) {
       this.updateAttachClasses(this.attachment, targetAttachment);
 
       var elementPos = this.cache('element-bounds', function () {
-        return getBounds(_this7.element);
+        return getBoundsFunc(_this7.element);
       });
 
       var width = elementPos.width;
@@ -1757,12 +1757,12 @@ var TetherClass = (function (_Evented) {
 
       var scrollbarSize = undefined;
       if (win.innerHeight > doc.documentElement.clientHeight) {
-        scrollbarSize = this.cache('scrollbar-size', getScrollBarSize);
+        scrollbarSize = this.cache('scrollbar-size', getScrollBarSizeFunc);
         next.viewport.bottom -= scrollbarSize.height;
       }
 
       if (win.innerWidth > doc.documentElement.clientWidth) {
-        scrollbarSize = this.cache('scrollbar-size', getScrollBarSize);
+        scrollbarSize = this.cache('scrollbar-size', getScrollBarSizeFunc);
         next.viewport.right -= scrollbarSize.width;
       }
 
@@ -1775,10 +1775,10 @@ var TetherClass = (function (_Evented) {
       if (typeof this.options.optimizations !== 'undefined' && this.options.optimizations.moveElement !== false && !(typeof this.targetModifier !== 'undefined')) {
         (function () {
           var offsetParent = _this7.cache('target-offsetparent', function () {
-            return getOffsetParent(_this7.target);
+            return getOffsetParentFunc(_this7.target);
           });
           var offsetPosition = _this7.cache('target-offsetparent-bounds', function () {
-            return getBounds(offsetParent);
+            return getBoundsFunc(offsetParent);
           });
           var offsetParentStyle = getComputedStyle(offsetParent);
           var offsetParentSize = offsetPosition;
@@ -1924,11 +1924,11 @@ var TetherClass = (function (_Evented) {
         (function () {
           css.position = 'absolute';
           var offsetParent = _this8.cache('target-offsetparent', function () {
-            return getOffsetParent(_this8.target);
+            return getOffsetParentFunc(_this8.target);
           });
 
-          if (getOffsetParent(_this8.element) !== offsetParent) {
-            defer(function () {
+          if (getOffsetParentFunc(_this8.element) !== offsetParent) {
+            deferFunc(function () {
               _this8.element.parentNode.removeChild(_this8.element);
               offsetParent.appendChild(_this8.element);
             });
@@ -1978,8 +1978,8 @@ var TetherClass = (function (_Evented) {
       }
 
       if (write) {
-        defer(function () {
-          extend(_this8.element.style, writeCSS);
+        deferFunc(function () {
+          extendFunc(_this8.element.style, writeCSS);
           _this8.trigger('repositioned');
         });
       }
@@ -1987,13 +1987,13 @@ var TetherClass = (function (_Evented) {
   }]);
 
   return TetherClass;
-})(Evented);
+})(EventedFunc);
 
 TetherClass.modules = [];
 
 TetherBase.position = position;
 
-var Tether = extend(TetherClass, TetherBase);
+var Tether = extendFunc(TetherClass, TetherBase);
 /* globals TetherBase */
 
 'use strict';
@@ -2108,8 +2108,8 @@ TetherBase.modules.push({
 
     var addClasses = [];
 
-    var tAttachment = extend({}, targetAttachment);
-    var eAttachment = extend({}, this.attachment);
+    var tAttachment = extendFunc({}, targetAttachment);
+    var eAttachment = extendFunc({}, this.attachment);
 
     this.options.constraints.forEach(function (constraint) {
       var to = constraint.to;
@@ -2372,11 +2372,11 @@ TetherBase.modules.push({
       }
     });
 
-    defer(function () {
+    deferFunc(function () {
       if (!(_this.options.addTargetClasses === false)) {
-        updateClasses(_this.target, addClasses, allClasses);
+        updateClassesFunc(_this.target, addClasses, allClasses);
       }
-      updateClasses(_this.element, addClasses, allClasses);
+      updateClassesFunc(_this.element, addClasses, allClasses);
     });
 
     return { top: top, left: left };
@@ -2446,11 +2446,11 @@ TetherBase.modules.push({
       addClasses.push(_this.getClass('abutted') + '-' + side);
     });
 
-    defer(function () {
+    deferFunc(function () {
       if (!(_this.options.addTargetClasses === false)) {
-        updateClasses(_this.target, addClasses, allClasses);
+        updateClassesFunc(_this.target, addClasses, allClasses);
       }
-      updateClasses(_this.element, addClasses, allClasses);
+      updateClassesFunc(_this.element, addClasses, allClasses);
     });
 
     return true;
